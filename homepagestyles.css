@@ -1,0 +1,50 @@
+
+header{
+    
+    text-align: center;
+    color: white;
+    background-color:  rgb(30, 30, 75);
+    width: 100%;
+    
+}
+body{
+    cursor: url('JamaicaCollegeLogo.png'), auto;
+    background-image:url("prjbkpic.png");
+    display: grid;
+    background-color:white;
+    justify-items: center;
+    image-resolution: 240px;
+    
+}
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+img{
+   
+    height: 63%;
+    width: 27%;
+}
+
+button{
+    color: white;
+    background-color: rgb(30, 30, 75);
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+    width: 100%;
+    
+
+}
+
+button:hover{
+    transition: background-color 0.9s ease; 
+    background-color: white;
+    color: rgb(30, 30,75);
+    cursor: pointer;
+}
+div{
+    display: grid;
+    padding-top:21%;
+}
