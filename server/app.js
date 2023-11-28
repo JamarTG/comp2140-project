@@ -19,9 +19,33 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../client")));
 
-// Assuming you have a Book model defined and your routes are set up
 
-// GET endpoint to retrieve books for a specific grade level
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Check if the username exists in the database
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (passwordMatch) {
+      return res.status(200).json({ message: "Login successful" });
+    } else {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
+
 app.get("/books/:gradeLevel", async (req, res) => {
   const { gradeLevel } = req.params;
 
@@ -44,11 +68,9 @@ app.post("/books", async (req, res) => {
   const { title, price, gradeLevel, authors, publisher, ISBN } = req.body;
 
   try {
-    // Check if a book with the same ISBN exists in the database
     const existingBook = await Book.findOne({ ISBN });
 
     if (existingBook) {
-      // If a book with the same ISBN exists, update its details
       existingBook.title = title;
       existingBook.price = price;
       existingBook.gradeLevel = gradeLevel;
@@ -58,7 +80,6 @@ app.post("/books", async (req, res) => {
       const updatedBook = await existingBook.save();
       res.json({ message: "Book updated successfully", data: updatedBook });
     } else {
-      // If no book with the same ISBN exists, create a new book
       const newBook = new Book({ title, price, gradeLevel, authors, publisher, ISBN });
       const savedBook = await newBook.save();
       res.json({ message: "Book added successfully", data: savedBook });

@@ -8,10 +8,16 @@
     padding: 0;
 }
 
+.container {
+
+    display: flex;
+    gap: 40px;
+}
+
 body {
     font-family: "DM Sans", sans-serif;
     background-color: #f1f3fb;
-
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -37,7 +43,7 @@ body {
     justify-content: flex-start;
     align-items: center;
     background-color: rgb(16, 63, 120);
-    width: 100vw;
+
 }
 
 
@@ -50,7 +56,6 @@ body {
 .logo img {
     width: 4em;
     height: 4em;
-    /* border-radius: 50%; */
 }
 
 .main-nav {
@@ -146,7 +151,7 @@ input {
 }
 
 .card-form {
-    padding: 2rem 1rem 0;
+    padding: rem 1rem 0;
 }
 
 .input {
@@ -213,10 +218,7 @@ hr {
     align-self: center;
 }
 
-.container {
-    display: flex;
-    gap: 20px;
-}
+
 
 footer {
     background-color: #333;
