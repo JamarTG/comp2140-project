@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Rental System</title>
+    <link rel="stylesheet" href="form.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="main-nav">
+        <a href="logo.html" class="logo">
+          <img src="assets/jc_logo.jpg" alt="jc-logo">
+        </a>
+        <ul>
+          <li><a href="home.html" class="home-link"><svg xmlns="http://www.w3.org/2000/svg" height="1em" fill="white" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg></a></li>
+          <li><a href="form.html" class="nav-link">Add Rentals/Books</a></li>
+          <li><a href="outs.html" class="nav-link">View Rental Details</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="container">
+      <section id="addBook">
+        <div class="card">
+          <h2>Add Book Form</h2>
+          <hr>
+          <form class="card-form">
+            <div class="input">
+              <input
+                id="title"
+                type="text"
+                class="input-field"
+                required
+                value="Sample Title"
+              />
+              <label class="input-label">Title</label>
+            </div>
+            <div class="input">
+              <input
+                id="price"
+                type="number"
+                class="input-field"
+                required
+                value="19.99"
+              />
+              <label class="input-label">Price</label>
+            </div>
+            <div class="input">
+              <input
+                id="grade"
+                type="number"
+                class="input-field"
+                required
+                value="8"
+              />
+              <label class="input-label">Grade Level</label>
+            </div>
+            <div class="input">
+              <input
+                id="Authors"
+                type="text"
+                class="input-field"
+                required
+                value="Author A, Author B"
+              />
+              <label class="input-label">Authors (Separated by commas)</label>
+            </div>
+            <div class="input">
+              <input
+                id="Publisher"
+                type="text"
+                class="input-field"
+                required
+                value="Sample Publisher"
+              />
+              <label class="input-label">Publisher</label>
+            </div>
+            <div class="input">
+              <input
+                id="ISBN"
+                type="text"
+                class="input-field"
+                required
+                value="978-0-00000-000-0"
+              />
+              <label class="input-label">ISBN</label>
+            </div>
+            <div class="action">
+              <button id="saveBook" class="action-button">Save Book</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="addRental">
+        <div class="card">
+          <h2>Add Rental Form</h2>
+          <hr>
+          <form class="card-form" id="rentalForm">
+            <div class="input">
+              <input
+                id="studentName"
+                type="text"
+                class="input-field"
+                required
+                value="John Doe"
+              />
+              <label class="input-label">Student Name</label>
+            </div>
+            <div class="input">
+              <input
+                id="schoolID"
+                type="text"
+                class="input-field"
+                required
+                value="AB123456"
+              />
+              <label class="input-label">School ID</label>
+            </div>
+            <div class="input">
+              <input
+                id="contactInfo"
+                type="text"
+                class="input-field"
+                required
+                value="123-456-7890"
+              />
+              <label class="input-label">Contact Information</label>
+            </div>
+            <label class="input-label">Books</label> 
+            <button id="viewBook" class="action-button">View Books</button> 
+            <div id="book-display">
+              
+            </div>
+            
+            <div class="input">
+              <input
+                id="dueDate"
+                type="date"
+                class="input-field"
+                required
+                value="2023-12-01"
+              />
+              <label>Due Date</label>
+            </div>
+            <div class="action">
+              <button id="saveRental" class="action-button">Save Rental</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script src="form.js"></script>
+  </body>
+</html>

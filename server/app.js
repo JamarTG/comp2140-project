@@ -19,51 +19,98 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../client")));
 
+// Assuming you have a Book model defined and your routes are set up
+
+// GET endpoint to retrieve books for a specific grade level
+app.get("/books/:gradeLevel", async (req, res) => {
+  const { gradeLevel } = req.params;
+
+  try {
+    const books = await Book.find({ gradeLevel: parseInt(gradeLevel) });
+
+    if (!books || books.length === 0) {
+      return res.status(404).json({ message: "No books found for this grade level" });
+    }
+
+    res.json({ message: `Books for grade level ${gradeLevel} retrieved successfully`, data: books });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve books for the grade level" });
+  }
+});
+
 
 app.post("/books", async (req, res) => {
   const { title, price, gradeLevel, authors, publisher, ISBN } = req.body;
-  const book = new Book({ title, price, gradeLevel, authors, publisher, ISBN });
 
   try {
-    const savedBook = await book.save();
-    res.json({ message: "Book added successfully", data: savedBook });
+    // Check if a book with the same ISBN exists in the database
+    const existingBook = await Book.findOne({ ISBN });
+
+    if (existingBook) {
+      // If a book with the same ISBN exists, update its details
+      existingBook.title = title;
+      existingBook.price = price;
+      existingBook.gradeLevel = gradeLevel;
+      existingBook.authors = authors;
+      existingBook.publisher = publisher;
+
+      const updatedBook = await existingBook.save();
+      res.json({ message: "Book updated successfully", data: updatedBook });
+    } else {
+      // If no book with the same ISBN exists, create a new book
+      const newBook = new Book({ title, price, gradeLevel, authors, publisher, ISBN });
+      const savedBook = await newBook.save();
+      res.json({ message: "Book added successfully", data: savedBook });
+    }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Failed to add book to the database" });
+    console.error(error);
+    res.status(500).json({ error: "Failed to add/update book in the database" });
   }
-  // {
-  //   "title": "Sample Book",
-  //   "price": 15.99,
-  //   "gradeLevel": 6,
-  //   "authors": ["Author 1", "Author 2"],
-  //   "publisher": "PublishCo",
-  //   "ISBN": "978-0-123456-78-9"
-  // }
 });
+
 
 app.post("/rental", async (req, res) => {
   const { studentName, schoolID, contact, bookIDs, dueDate } = req.body;
 
   try {
-    // Create a new rental record with student details and multiple books
-    const rentalDetail = new Rental({
-      studentName,
-      schoolID,
-      contact,
-      books: bookIDs,
-      dueDate,
-    });
+    // Check if there's an existing rental for the same student ID
+    const existingRental = await Rental.findOne({ schoolID });
 
-    const savedRentalDetail = await rentalDetail.save();
-    res.json({
-      message: "Rental Details added successfully",
-      data: savedRentalDetail,
-    });
+    if (existingRental) {
+      // If a rental for the same student ID exists, update its details
+      existingRental.studentName = studentName;
+      existingRental.contact = contact;
+      existingRental.dueDate = dueDate;
+
+      // Add the new bookIDs to the existing rental's books array
+
+      const updatedRental = await existingRental.save();
+      res.json({
+        message: "Rental Details updated successfully",
+        data: updatedRental,
+      });
+    } else {
+      // If no rental for the same student ID exists, create a new rental
+      const rentalDetail = new Rental({
+        studentName,
+        schoolID,
+        contact,
+        dueDate,
+      });
+
+      const savedRentalDetail = await rentalDetail.save();
+      res.json({
+        message: "Rental Details added successfully",
+        data: savedRentalDetail,
+      });
+    }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ error: "Failed to save rental details to the database" });
   }
 });
+
 
 
 app.get("/rental-details", async (req, res) => {
@@ -95,7 +142,7 @@ app.put("/book-returns/:rentalID", async (req, res) => {
       return res.status(404).json({ error: "Rental not found" });
     }
 
-    await rental.remove(); 
+    await rental.deleteOne(); 
 
     res.json({ message: "Book return successful" });
   } catch (error) {
@@ -104,33 +151,7 @@ app.put("/book-returns/:rentalID", async (req, res) => {
   }
 });
 
-app.post("/modify-rental", async (req, res) => {
-  const { studentName, schoolID, contact, bookIDs, dueDate } = req.body;
 
-  try {
-    const existingRental = await Rental.findOne({ schoolID }); // Assuming schoolID is unique
-
-    if (!existingRental) {
-      return res.status(404).json({ error: "Rental detail not found" });
-    }
-
-    // Modify the existing rental detail
-    existingRental.studentName = studentName;
-    existingRental.contact = contact;
-    existingRental.books = bookIDs;
-    existingRental.dueDate = dueDate;
-
-    const updatedRentalDetail = await existingRental.save();
-
-    res.json({
-      message: "Rental Details updated successfully",
-      data: updatedRentalDetail,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Failed to update rental details in the database" });
-  }
-});
 
 
 app.listen(port, () => {
