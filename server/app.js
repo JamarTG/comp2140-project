@@ -1,10 +1,12 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const db = require("./db");
 
 // models
+const User = require("./model/user");
 const Book = require("./model/book");
 const Rental = require("./model/rental");
 const app = express();
@@ -13,28 +15,55 @@ const port = 3000;
 // page to view the oustanding books / filter
 // add the rental details
 // calculate fine for overdue books
-// 
+//
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../client")));
 
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+  const existingUserCount = await User.countDocuments();
 
+  if (existingUserCount > 0) {
+    return res
+      .status(400)
+      .json({ message: "User already exists. Registration not allowed." });
+  }
+
+  try {
+    const existingUser = await User.findOne({ username });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+
+    const newUser = new User({ username, password });
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to register user" });
+  }
+});
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Check if the username exists in the database
+    // Find the user by username
     const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    // Compare the provided password with the stored hashed password
+    const passwordMatch = await user.comparePassword(password);
 
     if (passwordMatch) {
+      
       return res.status(200).json({ message: "Login successful" });
     } else {
       return res.status(401).json({ message: "Invalid username or password" });
@@ -45,7 +74,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
 app.get("/books/:gradeLevel", async (req, res) => {
   const { gradeLevel } = req.params;
 
@@ -53,16 +81,22 @@ app.get("/books/:gradeLevel", async (req, res) => {
     const books = await Book.find({ gradeLevel: parseInt(gradeLevel) });
 
     if (!books || books.length === 0) {
-      return res.status(404).json({ message: "No books found for this grade level" });
+      return res
+        .status(404)
+        .json({ message: "No books found for this grade level" });
     }
 
-    res.json({ message: `Books for grade level ${gradeLevel} retrieved successfully`, data: books });
+    res.json({
+      message: `Books for grade level ${gradeLevel} retrieved successfully`,
+      data: books,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to retrieve books for the grade level" });
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve books for the grade level" });
   }
 });
-
 
 app.post("/books", async (req, res) => {
   const { title, price, gradeLevel, authors, publisher, ISBN } = req.body;
@@ -80,16 +114,24 @@ app.post("/books", async (req, res) => {
       const updatedBook = await existingBook.save();
       res.json({ message: "Book updated successfully", data: updatedBook });
     } else {
-      const newBook = new Book({ title, price, gradeLevel, authors, publisher, ISBN });
+      const newBook = new Book({
+        title,
+        price,
+        gradeLevel,
+        authors,
+        publisher,
+        ISBN,
+      });
       const savedBook = await newBook.save();
       res.json({ message: "Book added successfully", data: savedBook });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to add/update book in the database" });
+    res
+      .status(500)
+      .json({ error: "Failed to add/update book in the database" });
   }
 });
-
 
 app.post("/rental", async (req, res) => {
   const { studentName, schoolID, contact, bookIDs, dueDate } = req.body;
@@ -128,11 +170,11 @@ app.post("/rental", async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to save rental details to the database" });
+    res
+      .status(500)
+      .json({ error: "Failed to save rental details to the database" });
   }
 });
-
-
 
 app.get("/rental-details", async (req, res) => {
   try {
@@ -163,7 +205,7 @@ app.put("/book-returns/:rentalID", async (req, res) => {
       return res.status(404).json({ error: "Rental not found" });
     }
 
-    await rental.deleteOne(); 
+    await rental.deleteOne();
 
     res.json({ message: "Book return successful" });
   } catch (error) {
@@ -171,9 +213,6 @@ app.put("/book-returns/:rentalID", async (req, res) => {
     res.status(500).json({ error: "Failed to process book return" });
   }
 });
-
-
-
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
