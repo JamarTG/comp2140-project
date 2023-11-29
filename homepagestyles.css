@@ -1,6 +1,7 @@
 
 header{
-    
+    padding-top: 0% ;
+    position: fixed;
     text-align: center;
     color: white;
     background-color:  rgb(30, 30, 75);
@@ -8,12 +9,13 @@ header{
     
 }
 body{
+    padding-top: 0%;
     cursor: url('JamaicaCollegeLogo.png'), auto;
     background-image:url("prjbkpic.png");
     display: grid;
     background-color:white;
     justify-items: center;
-    image-resolution: 240px;
+    
     
 }
 .button-container {
@@ -47,4 +49,42 @@ button:hover{
 div{
     display: grid;
     padding-top:21%;
+    
+}
+div.Article{
+    width:100%;
+    
+}
+nav{
+    padding-right:72%;
+    border-color:rgb(30, 30,75);
+}
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+nav li{
+    padding-right: 7%;
+}
+nav a:hover {
+    background-color: #555;
+}
+.linkbutton{
+    border-style: none;
+    height:27px;
+    width:108%;
+    
+}
+
+article{
+    justify-items: center;
+    width:100%;
+    color: white;
+    background-color: rgb(30, 30,75);
+}
+br{
+    background-color: white;
 }
