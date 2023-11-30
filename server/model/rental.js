@@ -2,27 +2,21 @@ const mongoose = require('mongoose');
 
 const rentalDetailSchema = new mongoose.Schema({
     studentName: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     schoolID: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     contact: {
-        type: String,
-        required: true,
-    },
-    gradeLevel: {
-        type: Number,
-        required: true,
-        min: 1,
-        max: 7,
+      type: String,
+      required: true,
     },
     dueDate: {
-        type: Date,
-        required: true,
+      type: Date,
+      required: true,
     }
 });
 
