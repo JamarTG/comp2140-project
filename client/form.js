@@ -1,5 +1,37 @@
+function showToast(message, type = "info") {
+  const toastContainer = document.getElementById("toast-container");
+  const toast = document.createElement("div");
+  toast.classList.add("toast", `toast-${type}`);
+  toast.textContent = message;
+
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }, 3000);
+  }, 100);
+}
+
+const viewBooksBtn = document.getElementById("viewBooks");
+
+viewBooksBtn.onclick = (event) => {
+  event.preventDefault();
+  const gradeLevelValue = document.getElementById("rentalGradeLevel").value;
+  displayBooks(gradeLevelValue);
+};
+
 const displayBooks = async (gradeLevel) => {
-  const bookDropdown = document.getElementById("book-display");
+  if (gradeLevel < 0 || gradeLevel > 8) {
+    throw new Error("Grade Levels range from 1 - 7");
+  }
+
+  const bookModal = document.getElementById("bookModal");
+  const bookDisplayModal = document.getElementById("book-display-modal");
 
   try {
     const response = await fetch(`http://localhost:3000/books/${gradeLevel}`);
@@ -10,23 +42,51 @@ const displayBooks = async (gradeLevel) => {
 
     const { data } = await response.json();
 
-    bookDropdown.innerHTML = "";
+    bookDisplayModal.innerHTML = "";
+
+    const gradeMapping = {
+      1: "1st Form",
+      2: "2nd Form",
+      3: "3rd Form",
+      4: "4th Form",
+      5: "5th Form",
+      6: "Lower 6th",
+      7: "Upper 6th",
+    };
+
+    if (!data.length) {
+      const noData = document.createElement("p");
+      noData.textContent = `No Rental Books for ${gradeMapping[gradeLevel]}`;
+      bookDisplayModal.append(noData);
+    } else {
+      const displayModalTitle = document.createElement("h1");
+
+      displayModalTitle.textContent = `${gradeMapping[gradeLevel]} Rental Books`;
+      bookDisplayModal.append(displayModalTitle);
+    }
+
     data.forEach((book) => {
       const bookTitle = document.createElement("p");
       bookTitle.textContent = `${book.title} by ${book.authors}`;
       bookTitle.style.cursor = "pointer";
+      bookDisplayModal.appendChild(bookTitle);
+    });
 
-      bookDropdown.appendChild(bookTitle);
+    bookModal.style.display = "block";
+
+    const closeButton = document.querySelector(".close");
+
+    closeButton.addEventListener("click", () => {
+      bookModal.style.display = "";
     });
   } catch (error) {
-    console.error("Error fetching books:", error);
+    showToast("Error fetching books", "error");
   }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   let saveBookBtn = document.getElementById("saveBook");
 
-  
   saveBookBtn.addEventListener("click", async (event) => {
     event.preventDefault();
     const formData = {
@@ -47,13 +107,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Book added successfully:", data);
+        showToast("Book added successfully", "success");
       } else {
         throw new Error("Failed to add book");
       }
     } catch (error) {
-      console.error("Error adding book:", error);
+      showToast("Please fill all required fields", "error");
     }
   });
 
@@ -66,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       schoolID: document.getElementById("schoolID").value,
       contact: document.getElementById("contactInfo").value,
       dueDate: document.getElementById("dueDate").value,
+      gradeLevel: document.getElementById("rentalGradeLevel").value,
     };
 
     try {
@@ -78,13 +138,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Rental details added successfully:", data);
+        showToast("Rental details added successfully", "success");
       } else {
-        throw new Error("Failed to add rental details");
+        showToast("Failed to add rental details", "error");
       }
     } catch (error) {
-      console.error("Error adding rental details:", error);
+      showToast("Error adding rental details", "error");
     }
   });
 });

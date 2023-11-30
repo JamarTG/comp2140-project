@@ -10,7 +10,43 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (error) {
     console.error("Error fetching and displaying rental details:", error);
   }
+
+  document.getElementById("filterOverdueBtn").addEventListener("click", async () => {
+    document.getElementById("table-container").innerHTML = "";
+
+    try {
+      const overdueRentalData = await fetchOverdueRentalDetails();
+      
+      if (overdueRentalData.length > 0) {
+        const overdueTable = createRentalTable(overdueRentalData);
+        displayRentalTable(overdueTable);
+      } else {
+        displayNoRentalDataMessage();
+      }
+    } catch (error) {
+      console.error("Error fetching and displaying overdue rental details:", error);
+    }
+  });
+
+  document.getElementById("allRentalsBtn").addEventListener("click", async () => {
+    document.getElementById("table-container").innerHTML = "";
+
+    try {
+      const overdueRentalData = await fetchRentalDetails();
+      
+      if (overdueRentalData.length > 0) {
+        const overdueTable = createRentalTable(overdueRentalData);
+        displayRentalTable(overdueTable);
+      } else {
+        displayNoRentalDataMessage();
+      }
+    } catch (error) {
+      console.error("Error fetching and displaying overdue rental details:", error);
+    }
+  });
 });
+
+
 
 function displayNoRentalDataMessage() {
   const noDataMessage = document.createElement("p");
@@ -25,6 +61,15 @@ async function fetchRentalDetails() {
   const response = await fetch("http://localhost:3000/rental-details");
   if (!response.ok) {
     throw new Error("Failed to fetch rental details");
+  }
+  const { data } = await response.json();
+  return data;
+}
+
+async function fetchOverdueRentalDetails() {
+  const response = await fetch("http://localhost:3000/overdue-rentals");
+  if (!response.ok) {
+    throw new Error("Failed to fetch overdue rental details");
   }
   const { data } = await response.json();
   return data;
@@ -99,11 +144,11 @@ const calculateFine = (date) => {
 
   if (currentDate > dueDate) {
     const timeDiff = currentDate.getTime() - dueDate.getTime();
-    const daysOverdue = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Calculate days overdue
-    const fine = daysOverdue * 50; // Calculate fine at 20% per overdue day
-    return `$${fine.toString()}`; // Return fine as a string
+    const daysOverdue = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+    const fine = daysOverdue * 50;
+    return `$${fine.toString()}`; 
   } else {
-    return "-"; // Book is not overdue
+    return "-";
   }
 };
 

@@ -12,10 +12,6 @@ const Rental = require("./model/rental");
 const app = express();
 const port = 3000;
 
-// page to view the oustanding books / filter
-// add the rental details
-// calculate fine for overdue books
-//
 
 app.use(cors());
 app.use(bodyParser.json());

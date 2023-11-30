@@ -48,6 +48,18 @@ body {
     margin-right: 10em;
 }
 
+.logo {
+    margin-right: 10em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo h2 {
+    color: white;
+    font-variant: small-caps;
+}
+
 .main-nav ul {
     list-style-type: none;
     margin: 0;
@@ -160,8 +172,8 @@ td {
     font: inherit;
     font-size: .9rem;
     padding: 1em;
-    width: 10rem;
-    height: 3rem;
+    width: 180px;
+    height: 40px;
     font-weight: 500;
     background-color: #6658d3;
     border-radius: 6px;
@@ -175,12 +187,38 @@ td {
     font: inherit;
     font-size: .9rem;
     padding: 1em;
-    width: 10rem;
-    height: 3rem;
+    width: 180px;
+    height: 40px;
     font-weight: 500;
     background-color: #d4d71e;
     border-radius: 6px;
     color: #fff;
     border: 0;
 
+}
+
+.action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-button {
+
+
+    font: inherit;
+    font-size: 1rem;
+    margin: 20px;
+    width: 200px;
+    height: 40px;
+    font-weight: 500;
+    background-color: #6658d3;
+    border-radius: 6px;
+    color: #fff;
+    border: 0;
+}
+
+.action-button:hover {
+    background-color: #5140d3;
+    cursor: pointer;
 }
