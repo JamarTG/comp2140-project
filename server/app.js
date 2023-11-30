@@ -56,14 +56,15 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid username or password" });
+      return res
+        .status(401)
+        .json({ message: "Invalid username or password, Please try again" });
     }
 
     // Compare the provided password with the stored hashed password
     const passwordMatch = await user.comparePassword(password);
 
     if (passwordMatch) {
-      
       return res.status(200).json({ message: "Login successful" });
     } else {
       return res.status(401).json({ message: "Invalid username or password" });
@@ -80,14 +81,9 @@ app.get("/books/:gradeLevel", async (req, res) => {
   try {
     const books = await Book.find({ gradeLevel: parseInt(gradeLevel) });
 
-    if (!books || books.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No books found for this grade level" });
-    }
+   
 
     res.json({
-      message: `Books for grade level ${gradeLevel} retrieved successfully`,
       data: books,
     });
   } catch (error) {
@@ -134,32 +130,27 @@ app.post("/books", async (req, res) => {
 });
 
 app.post("/rental", async (req, res) => {
-  const { studentName, schoolID, contact, bookIDs, dueDate } = req.body;
+  const { studentName, schoolID, contact, dueDate, gradeLevel } = req.body;
 
   try {
-    // Check if there's an existing rental for the same student ID
     const existingRental = await Rental.findOne({ schoolID });
 
     if (existingRental) {
-      // If a rental for the same student ID exists, update its details
       existingRental.studentName = studentName;
       existingRental.contact = contact;
       existingRental.dueDate = dueDate;
-
-      // Add the new bookIDs to the existing rental's books array
-
       const updatedRental = await existingRental.save();
       res.json({
         message: "Rental Details updated successfully",
         data: updatedRental,
       });
     } else {
-      // If no rental for the same student ID exists, create a new rental
       const rentalDetail = new Rental({
         studentName,
         schoolID,
         contact,
         dueDate,
+        gradeLevel,
       });
 
       const savedRentalDetail = await rentalDetail.save();
@@ -185,13 +176,13 @@ app.get("/rental-details", async (req, res) => {
   }
 });
 
-app.get("/overdue-books", async (req, res) => {
+app.get("/overdue-rentals", async (req, res) => {
   try {
     const today = new Date();
-    const overdueBooks = await Book.find({ dueDate: { $lt: today } });
+    const overdueBooks = await Rental.find({ dueDate: { $lt: today } });
     res.json({ data: overdueBooks });
   } catch (error) {
-    res.status(500).json({ error: "Failed to get overdue books" });
+    res.status(500).json({ error: "Failed to get overdue rentals" });
   }
 });
 
