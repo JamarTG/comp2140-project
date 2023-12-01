@@ -28,6 +28,11 @@ body {
 
 }
 
+td > tr{
+    display: flex;
+    justify-content: center;
+}
+
 .logo img {
     width: 4em;
     height: 4em;

@@ -17,7 +17,11 @@ const rentalDetailSchema = new mongoose.Schema({
     dueDate: {
       type: Date,
       required: true,
-    }
+    },
+    gradeLevel: {
+      type: Number,
+      required: true,
+  }
 });
 
 const RentalDetail = mongoose.model('RentalDetail', rentalDetailSchema);

@@ -98,7 +98,7 @@ function createRentalTable(rentalData) {
 function createTableHead() {
   const tableHead = document.createElement("thead");
   const tableRow = document.createElement("tr");
-  const tableHeaders = ["Student Name", "School ID", "Contact", "Due Date"];
+  const tableHeaders = ["Student Name", "Book Grade Level" , "School ID", "Contact", "Due Date"];
 
   tableHeaders.forEach((header) => {
     const tableHeader = document.createElement("th");
@@ -123,13 +123,25 @@ function createTableBody(rentalData) {
 
 function createTableRow(rentalDetail) {
   const row = document.createElement("tr");
+  const gradeMapping = {
+    1: "1st Form",
+    2: "2nd Form",
+    3: "3rd Form",
+    4: "4th Form",
+    5: "5th Form",
+    6: "Lower 6th",
+    7: "Upper 6th",
+  };
 
-  const cells = ["studentName", "schoolID", "contact", "dueDate"];
+  const cells = ["studentName", "gradeLevel", "schoolID", "contact", "dueDate"];
   cells.forEach((cell) => {
-    const cellData =
-      cell === "dueDate"
-        ? new Date(rentalDetail[cell]).toLocaleDateString()
-        : rentalDetail[cell];
+    let cellData = rentalDetail[cell];
+
+    if (cell === "gradeLevel") {
+      cellData = gradeMapping[cellData] || cellData;
+    } else if (cell === "dueDate") {
+      cellData = new Date(cellData).toLocaleDateString();
+    }
 
     const tableCell = document.createElement("td");
     tableCell.textContent = cellData;
@@ -141,6 +153,7 @@ function createTableRow(rentalDetail) {
 
   return row;
 }
+
 
 const calculateFine = (date) => {
   const currentDate = new Date();
