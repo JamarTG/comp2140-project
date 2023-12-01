@@ -18,7 +18,9 @@ body {
     align-items: center;
 }
 
-
+.active {
+    background-color: #333;
+}
 
 .site-header {
     background-color: #f2f2f2;

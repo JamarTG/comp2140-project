@@ -18,6 +18,14 @@ body {
     align-items: center;
 }
 
+.active {
+    background-color: #333;
+}
+
+#addRental {
+    margin-bottom: 20px;
+}
+
 
 .modal {
     display: none;

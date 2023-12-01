@@ -20,10 +20,10 @@
       <nav class="main-nav">
         <div class="logo">
           <img src="assets/jc_logo.jpg" alt="jc-logo" />
-          <h2>Jamaica College Rental System</h2>
+          <h2>Jamaica College Book Rental Software</h2>
         </div>
         <ul>
-          <li><a href="form.html" class="nav-link">Add Rentals/Books</a></li>
+          <li><a href="form.html" class="nav-link active">Add Rentals/Books</a></li>
           <li><a href="outs.html" class="nav-link">View Rental Details</a></li>
         </ul>
       </nav>
@@ -51,19 +51,22 @@
                 type="text"
                 class="input-field"
                 required
-                value="Sample Title"
+                value="To Kill a Mockingbird by Harper Lee"
+                placeholder="Enter the Title of the Book"
               />
               <label class="input-label">Title</label>
             </div>
             <div class="input">
+              
               <input
                 id="price"
                 type="number"
                 class="input-field"
                 required
-                value="19.99"
-              />
-              <label class="input-label">Price</label>
+                value="3000"
+                placeholder="Enter the Price of the Book"
+                />
+              <label class="input-label">Price (JMD)</label>
             </div>
             <div class="input">
               <input
@@ -71,7 +74,10 @@
                 type="number"
                 class="input-field"
                 required
+                placeholder="Enter the Form Number"
                 value="7"
+                min=1 
+                max=7
               />
               <label class="input-label">Grade Level</label>
             </div>
@@ -81,7 +87,8 @@
                 type="text"
                 class="input-field"
                 required
-                value="Author A, Author B"
+                value="Harper Lee"
+                placeholder="Enter the Author(s) of the Book"
               />
               <label class="input-label">Authors (Separated by commas)</label>
             </div>
@@ -91,7 +98,7 @@
                 type="text"
                 class="input-field"
                 required
-                value="Sample Publisher"
+                value="J. B. Lippincott & Co."
               />
               <label class="input-label">Publisher</label>
             </div>
@@ -127,6 +134,7 @@
                 class="input-field"
                 required
                 value="John Doe"
+                placeholder="Enter the name of the student"
               />
               <label class="input-label">Student Name</label>
             </div>
@@ -137,6 +145,7 @@
                 class="input-field"
                 required
                 value="AB123456"
+                placeholder="Enter the ID of the student"
               />
               <label class="input-label">School ID</label>
             </div>
@@ -147,6 +156,7 @@
                 class="input-field"
                 required
                 value="123-456-7890"
+                placeholder="Enter the contact details of the student"
               />
               <label class="input-label">Contact Information</label>
             </div>
@@ -171,7 +181,6 @@
                 type="date"
                 class="input-field"
                 required
-                value="2023-12-01"
               />
               <label>Due Date</label>
             </div>
